@@ -29,7 +29,6 @@ env:
 
 script:
   - set -e
-  - error
   - export MULTI_ARCH_IMG=${REGISTRY}/nginx-fips-${ARCH}
   - export TAG=nginx-v0.27.1
   - export PROJECT_DIR=${PWD}
