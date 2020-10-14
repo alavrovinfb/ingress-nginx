@@ -44,11 +44,10 @@ script:
 
 deploy:
   provider: script
-  script: 
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      && make push
-    - docker tag ${MULTI_ARCH_IMG}:nginx-v0.27.1 ${REGISTRY}/nginx-fips:nginx-v0.27.1
-    - docker push ${REGISTRY}/nginx-fips:nginx-v0.27.1
+  script: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin \
+        && make push \
+        && docker tag ${MULTI_ARCH_IMG}:nginx-v0.27.1 ${REGISTRY}/nginx-fips:nginx-v0.27.1 \
+        && docker push ${REGISTRY}/nginx-fips:nginx-v0.27.1
   skip_cleanup: true
   on:
     all_branches: true 
