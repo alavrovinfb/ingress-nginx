@@ -19,10 +19,18 @@ pipeline {
     IMGNAME = 'nginx-fips'
     PLATFORMS = 'amd64'
     ARCH = 'amd64'
-    MULTI_ARCH_IMG="${env.REGISTRY}/${env.IMGNAME}-${env.ARCH}"
+    MULTI_ARCH_IMG = "${env.REGISTRY}/${env.IMGNAME}-${env.ARCH}"
+    MULTI_ARCH_IMAGE = "${env.REGISTRY}/${env.IMGNAME}"
     BASEIMAGE = "${REGISTRY}/${env.IMGNAME}:${TAG}"
     DOCKER_CLI_EXPERIMENTAL = 'enabled'
     GOPATH = "$WORKSPACE"
+  }
+  stage("Ingress Unit Tests") {
+    steps {
+      dir("$DIRECTORY") {
+        sh "make test"
+      }
+    }
   }
   stages {
     stage("Setup docker-ce") {
@@ -78,7 +86,7 @@ pipeline {
     }
     stage("Push Ingress Image") {
       when {
-        anyOf { branch 'nginx-0.27.1-fips'; buildingTag() }
+        anyOf { branch 'nginx-0.27.1-fips'; branch 'ATLAS-8981-test'; buildingTag() }
       }
       steps {
         withDockerRegistry([credentialsId: "${env.JENKINS_DOCKER_CRED_ID}", url: ""]) {
